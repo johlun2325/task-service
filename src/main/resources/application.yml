@@ -1,8 +1,16 @@
 quarkus:
   profile:
     parent: env
+
   http:
-    port: 8082
+    port: ${PORT}
+
+  mongodb:
+    connection-string: ${LOCAL_MONGO_URL}
+    database: ${LOCAL_MONGO_DB}
+    #username: myusername
+    #password: mypassword
+    authentication-database: ${LOCAL_MONGO_USER}
 
 kafka:
   bootstrap:
