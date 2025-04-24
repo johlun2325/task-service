@@ -1,0 +1,23 @@
+quarkus:
+  profile:
+    parent: env
+  http:
+    port: 8082
+
+kafka:
+  bootstrap:
+    servers: ${LOCAL_BROKER}
+
+logging:
+  level:
+    org.apache.kafka: INFO
+    org.springframework.kafka: INFO
+
+mp:
+  messaging:
+    incoming:
+      created:
+        connector: smallrye-kafka
+        topic: "item-created"
+        value:
+          deserializer: org.apache.kafka.common.serialization.StringDeserializer
