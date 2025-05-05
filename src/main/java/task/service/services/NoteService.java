@@ -9,6 +9,7 @@ import task.service.models.Note;
 import task.service.models.payloads.NotePayload;
 import task.service.repos.NoteRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -18,6 +19,16 @@ public class NoteService
 
     @Inject
     NoteRepository repository;
+
+    public List<Note> getAllNotes(final String userUid)
+    {
+        LOGGER.debug("Fetching all notes for user");
+
+        var notes = repository.findByUserUid(userUid);
+
+        LOGGER.debug("All notes fetched");
+        return notes;
+    }
 
     public Note createNote(final NotePayload payload, final String userUid)
     {

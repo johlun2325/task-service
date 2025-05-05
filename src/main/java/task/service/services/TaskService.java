@@ -5,10 +5,12 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import task.service.models.Note;
 import task.service.models.Task;
 import task.service.models.payloads.TaskPayload;
 import task.service.repos.TaskRepository;
 
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -18,6 +20,18 @@ public class TaskService
 
     @Inject
     TaskRepository repository;
+
+    public List<Task> getAllTasks(final String userUid)
+    {
+        LOGGER.debug("Fetching all notes for user");
+
+        var tasks = repository.findByUserUid(userUid);
+
+        LOGGER.debug("All tasks fetched");
+
+        return tasks;
+    }
+
     public Task createTask(final String userUid, final TaskPayload payload)
     {
 
