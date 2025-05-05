@@ -10,27 +10,27 @@ import java.util.List;
 @ApplicationScoped
 public class TaskRepository implements PanacheMongoRepository<Task>
 {
-    public Task findById(String id)
+    public Task findById(final String id)
     {
         return findById(new ObjectId(id));
     }
 
-    public Task findByUid(String uid)
+    public Task findByUid(final String uid)
     {
         return find("uid", uid).firstResult();
     }
 
-    public List<Task> findByUserUid(String userUid)
+    public List<Task> findByUserUid(final String userUid)
     {
         return list("userUid", userUid);
     }
 
-    public List<Task> findCompletedByUserUid(String userUid)
+    public List<Task> findCompletedByUserUid(final String userUid)
     {
         return list("userUid = ?1 and completed = ?2", userUid, true);
     }
 
-    public List<Task> findPriorityByUserUid(String userUid)
+    public List<Task> findPriorityByUserUid(final String userUid)
     {
         return list("userUid = ?1 and priority = ?2", userUid, true);
     }

@@ -23,12 +23,28 @@ public class TaskService
 
     public List<Task> getAllTasks(final String userUid)
     {
-        LOGGER.debug("Fetching all notes for user");
-
+        LOGGER.debug("Fetching all tasks for user");
         var tasks = repository.findByUserUid(userUid);
 
         LOGGER.debug("All tasks fetched");
+        return tasks;
+    }
 
+    public List<Task> getCompletedTasks(final String userUid)
+    {
+        LOGGER.debug("Fetching all completed tasks for user");
+        var tasks = repository.findCompletedByUserUid(userUid);
+
+        LOGGER.debug("All competed tasks fetched");
+        return tasks;
+    }
+
+    public List<Task> getPriorityTasks(final String userUid)
+    {
+        LOGGER.debug("Fetching all priority tasks for user");
+        var tasks = repository.findPriorityByUserUid(userUid);
+
+        LOGGER.debug("All priority tasks fetched");
         return tasks;
     }
 

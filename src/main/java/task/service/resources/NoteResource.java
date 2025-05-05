@@ -4,14 +4,12 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task.service.models.Note;
 import task.service.models.payloads.NotePayload;
 import task.service.services.NoteService;
 import task.service.utils.ResponseUtils;
-
-import java.util.List;
 
 @Path("/note")
 public class NoteResource
@@ -25,6 +23,7 @@ public class NoteResource
     @Path("/all/{userUid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Get all notes by specified user")
     public Response allNotesByUser(@PathParam("userUid") final String userUid)
     {
         LOGGER.debug("Get request for all notes received");
@@ -48,6 +47,7 @@ public class NoteResource
     @Path("/create/{userUid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Create note for specified user")
     public Response create(@PathParam("userUid") final String userUid, final NotePayload payload)
     {
         LOGGER.debug("Create request received for note item");
@@ -77,6 +77,7 @@ public class NoteResource
     @Path("/update/{itemUid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Update specified note")
     public Response update(@PathParam("itemUid") final String itemUid, final NotePayload payload)
     {
         LOGGER.debug("Update request received for note item");
@@ -106,6 +107,7 @@ public class NoteResource
     @Path("/delete/{itemUid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Delete specified task")
     public Response delete(@PathParam("itemUid") final String itemUid)
     {
         LOGGER.debug("Delete request received for note item");
@@ -128,6 +130,8 @@ public class NoteResource
 
     private boolean validatePayload(final NotePayload payload)
     {
+        // todo: improve on validate method
+
         if (payload.getTitle().isEmpty())
             return false;
 
