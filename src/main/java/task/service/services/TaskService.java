@@ -1,0 +1,134 @@
+package task.service.services;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import task.service.models.Task;
+import task.service.models.payloads.TaskPayload;
+import task.service.repos.TaskRepository;
+
+import java.util.UUID;
+
+@ApplicationScoped
+public class TaskService
+{
+    private final static Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
+
+    @Inject
+    TaskRepository repository;
+    public Task createTask(final String userUid, final TaskPayload payload)
+    {
+
+        LOGGER.info("Creating task");
+
+        var task = buildNewTask(payload, userUid);
+
+        repository.persist(task);
+
+        LOGGER.info("Task persisted with values: {}", task);
+
+        // for debugging fetch the task by uid, the same as eventUid
+        var fetchedTask = repository.findByUid(task.getUid());
+        LOGGER.info("Task fetched successfully with title: {}", fetchedTask.getTitle());
+
+        return task;
+    }
+
+    public Task updateTask(final TaskPayload payload, final String itemUid)
+    {
+        LOGGER.info("Updating task");
+
+        var task = buildUpdatedTask(payload, itemUid);
+
+        repository.update(task);
+
+        LOGGER.info("Task updated with values: {}", task);
+
+        var fetchedTask = repository.findByUid(task.getUid());
+        LOGGER.info("Updated task fetched successfully with title: {}", fetchedTask.getTitle());
+
+        return task;
+    }
+
+    public void deleteTask(final String itemUid)
+    {
+        try
+        {
+            var taskToDelete = repository.findByUid(itemUid);
+
+            if (taskToDelete == null)
+            {
+                throw new NotFoundException("Task with uid " + itemUid + " not found");
+            }
+
+            repository.delete(taskToDelete);
+            LOGGER.info("Task with uid {} deleted", itemUid);
+
+        } catch (Exception e)
+        {
+            LOGGER.info("Could not delete task");
+            throw new RuntimeException();
+        }
+    }
+
+    private Task buildNewTask(final TaskPayload payload, final String userUid)
+    {
+        var task = new Task();
+
+        // mongodb is generating id field
+        task.setUid(UUID.randomUUID().toString()); // set unique uid for task
+        task.setUserUid(userUid);
+        task.setType("task");
+        task.setTitle(payload.getTitle());
+        task.setDescription(payload.getDescription());
+
+        task.setPriority(payload.getPriority());
+        task.setCompleted(payload.getCompleted());
+
+        // when crated these values are equal, completed is null
+        var currentTime = System.currentTimeMillis();
+        task.setCreatedAt(currentTime);
+        task.setUpdatedAt(currentTime);
+        task.setCompletedAt(null);
+
+        return task;
+    }
+
+    private Task buildUpdatedTask(final TaskPayload payload, final String itemUid)
+    {
+        var taskToUpdate = repository.findByUid(itemUid);
+        var currentTime = System.currentTimeMillis();
+
+        if (payload.getTitle() != null)
+            taskToUpdate.setTitle(payload.getTitle());
+
+        if (payload.getDescription() != null)
+            taskToUpdate.setDescription(payload.getDescription());
+
+        if (payload.getPriority() != null)
+            taskToUpdate.setPriority(payload.getPriority());
+
+        if (payload.getCompleted() != null)
+        {
+            var isCompleted = payload.getCompleted();
+
+            taskToUpdate.setCompleted(isCompleted);
+
+            if (isCompleted && taskToUpdate.getCompletedAt() == null)
+            {
+                // setting current time when completed if updated value=true and current is null
+                taskToUpdate.setCompletedAt(currentTime);
+
+            } else if (!isCompleted)
+            {
+                taskToUpdate.setCompletedAt(null);
+            }
+        }
+
+        taskToUpdate.setUpdatedAt(currentTime); // setting current time when updated
+
+        return taskToUpdate;
+    }
+}

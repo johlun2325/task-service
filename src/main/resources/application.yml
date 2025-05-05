@@ -1,6 +1,11 @@
 quarkus:
   profile:
     parent: env
+  log:
+    level: INFO
+    category:
+      "task.service":
+        level: DEBUG
 
   http:
     port: ${PORT}
