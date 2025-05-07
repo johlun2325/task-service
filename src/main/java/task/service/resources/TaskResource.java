@@ -24,7 +24,7 @@ public class TaskResource
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get all tasks by specified user")
-    public Response allNotesByUser(@PathParam("userUid") final String userUid)
+    public Response allTasksByUser(@PathParam("userUid") final String userUid)
     {
         LOGGER.debug("Get request for all tasks received");
 
@@ -37,8 +37,10 @@ public class TaskResource
         {
             var tasks = taskService.getAllTasks(userUid);
             return ResponseUtils.successResponse(Response.Status.OK, tasks);
+
         } catch (final Exception e)
         {
+            LOGGER.debug("Could not fetch tasks");
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Could not fetch tasks");
         }
     }
@@ -105,9 +107,11 @@ public class TaskResource
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "User uid is required");
         }
 
-        if (!validatePayload(payload))
+        if (!payload.isValidForCreate())
         {
-            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Invalid payload");
+            LOGGER.debug("Payload is invalid, cannot create task");
+            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST,
+                    "Invalid payload, must send all fields to create");
         }
 
         try
@@ -135,9 +139,11 @@ public class TaskResource
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Item uid is required");
         }
 
-        if (!validatePayload(payload))
+        if (!payload.isValidForUpdate())
         {
-            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Invalid payload");
+            LOGGER.debug("Payload is invalid, cannot update task");
+            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST,
+                    "Invalid payload, must send minimum of one field to update");
         }
 
         try
@@ -173,25 +179,5 @@ public class TaskResource
         {
             return ResponseUtils.errorResponse(Response.Status.NOT_FOUND, "Item could not be deleted");
         }
-    }
-
-    private boolean validatePayload(final TaskPayload payload)
-    {
-        // todo: improve on validate method
-
-        if (payload.getTitle().isEmpty())
-            return false;
-
-        if (payload.getDescription().isEmpty())
-            return false;
-
-        if (payload.getPriority() == null)
-            return false;
-
-        if (payload.getCompleted() == null)
-            return false;
-
-        LOGGER.debug("Payload has valida values");
-        return true;
     }
 }

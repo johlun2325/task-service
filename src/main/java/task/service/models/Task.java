@@ -8,7 +8,7 @@ import org.bson.codecs.pojo.annotations.BsonId;
 import org.bson.codecs.pojo.annotations.BsonRepresentation;
 
 @Data
-@MongoEntity(collection = "task")
+@MongoEntity(collection = "tasks")
 public final class Task
 {
     @JsonIgnore
@@ -17,7 +17,6 @@ public final class Task
     private String id;
 
     private String uid;
-
     private String userUid;
     private String type;
     private String title;

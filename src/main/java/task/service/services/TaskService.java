@@ -121,7 +121,14 @@ public class TaskService
         var currentTime = System.currentTimeMillis();
         task.setCreatedAt(currentTime);
         task.setUpdatedAt(currentTime);
-        task.setCompletedAt(null);
+
+        if (task.isCompleted())
+        {
+            task.setCompletedAt(currentTime);
+        } else
+        {
+            task.setCompletedAt(null);
+        }
 
         return task;
     }

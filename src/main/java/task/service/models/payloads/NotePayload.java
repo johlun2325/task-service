@@ -15,4 +15,14 @@ public class NotePayload
 
     private String title;
     private String text;
+
+    public boolean isValidForCreate()
+    {
+        return title != null && !title.trim().isEmpty() && text != null;
+    }
+
+    public boolean isValidForUpdate()
+    {
+        return title != null || text != null;
+    }
 }

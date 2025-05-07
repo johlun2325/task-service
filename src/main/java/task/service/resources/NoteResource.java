@@ -57,9 +57,11 @@ public class NoteResource
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "User uid is required");
         }
 
-        if (!validatePayload(payload))
+        if (payload.isValidForCreate())
         {
-            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Invalid payload");
+            LOGGER.debug("Payload is invalid, cannot create note");
+            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST,
+                    "Invalid payload, must send all fields to create");
         }
 
         try
@@ -87,9 +89,11 @@ public class NoteResource
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Item uid is required");
         }
 
-        if (!validatePayload(payload))
+        if (payload.isValidForUpdate())
         {
-            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Invalid payload");
+            LOGGER.debug("Payload is invalid, cannot update note");
+            return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST,
+                    "Invalid payload, must send minimum of one field to update");
         }
 
         try
@@ -126,19 +130,5 @@ public class NoteResource
         {
             return ResponseUtils.errorResponse(Response.Status.NOT_FOUND, "Item could not be deleted");
         }
-    }
-
-    private boolean validatePayload(final NotePayload payload)
-    {
-        // todo: improve on validate method
-
-        if (payload.getTitle().isEmpty())
-            return false;
-
-        if (payload.getText().isEmpty())
-            return false;
-
-        LOGGER.debug("Payload has valida values");
-        return true;
     }
 }

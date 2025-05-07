@@ -19,4 +19,14 @@ public final class TaskPayload
     private String description;
     private Boolean priority;
     private Boolean completed;
+
+    public boolean isValidForCreate()
+    {
+        return title != null && !title.trim().isEmpty() && description != null && priority != null && completed != null;
+    }
+
+    public boolean isValidForUpdate()
+    {
+        return title != null || description != null || priority != null || completed != null;
+    }
 }

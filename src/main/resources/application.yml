@@ -17,20 +17,7 @@ quarkus:
     #password: mypassword
     authentication-database: ${LOCAL_MONGO_USER}
 
-kafka:
-  bootstrap:
-    servers: ${LOCAL_BROKER}
-
 logging:
   level:
     org.apache.kafka: INFO
     org.springframework.kafka: INFO
-
-mp:
-  messaging:
-    incoming:
-      created:
-        connector: smallrye-kafka
-        topic: "item-created"
-        value:
-          deserializer: org.apache.kafka.common.serialization.StringDeserializer
