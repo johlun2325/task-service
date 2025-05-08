@@ -1,6 +1,8 @@
 quarkus:
   profile:
     parent: env
+  jackson:
+    fail-on-unknown-properties: true
   log:
     level: INFO
     category:
