@@ -57,7 +57,7 @@ public class NoteResource
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "User uid is required");
         }
 
-        if (payload.isValidForCreate())
+        if (!payload.isValidForCreate())
         {
             LOGGER.debug("Payload is invalid, cannot create note");
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST,
@@ -89,7 +89,7 @@ public class NoteResource
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST, "Item uid is required");
         }
 
-        if (payload.isValidForUpdate())
+        if (!payload.isValidForUpdate())
         {
             LOGGER.debug("Payload is invalid, cannot update note");
             return ResponseUtils.errorResponse(Response.Status.BAD_REQUEST,
