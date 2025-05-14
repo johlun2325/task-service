@@ -9,17 +9,11 @@ quarkus:
       "task.service":
         level: DEBUG
 
+#Service port
   http:
     port: ${PORT}
 
+#MongoDB config
   mongodb:
     connection-string: ${LOCAL_MONGO_URL}
     database: ${LOCAL_MONGO_DB}
-    #username: myusername
-    #password: mypassword
-    authentication-database: ${LOCAL_MONGO_USER}
-
-logging:
-  level:
-    org.apache.kafka: INFO
-    org.springframework.kafka: INFO
