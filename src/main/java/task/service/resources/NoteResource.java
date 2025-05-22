@@ -66,7 +66,7 @@ public class NoteResource
 
         try
         {
-            var note = noteService.createNote(payload, userUid);
+            var note = noteService.createNote(userUid, payload);
             return ResponseUtils.successResponse(Response.Status.CREATED, note);
 
         } catch (final Exception e)

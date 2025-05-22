@@ -23,14 +23,13 @@ public class NoteService
     public List<Note> getAllNotes(final String userUid)
     {
         LOGGER.debug("Fetching all notes for user");
-
         var notes = repository.findByUserUid(userUid);
 
         LOGGER.debug("All notes fetched");
         return notes;
     }
 
-    public Note createNote(final NotePayload payload, final String userUid)
+    public Note createNote(final String userUid, final NotePayload payload)
     {
         LOGGER.info("Creating note");
 
@@ -57,8 +56,8 @@ public class NoteService
 
         LOGGER.info("Note updated with values: {}", note);
 
-        var fetchedTask = repository.findByUid(note.getUid());
-        LOGGER.debug("Updated note fetched successfully with title: {}", fetchedTask.getTitle());
+        var fetchedNote = repository.findByUid(note.getUid());
+        LOGGER.debug("Updated note fetched successfully with title: {}", fetchedNote.getTitle());
 
         return note;
     }
@@ -110,7 +109,7 @@ public class NoteService
         note.setTitle(payload.getTitle());
         note.setText(payload.getText());
 
-        // when crated these values are equal, completed is null
+        // when created these values are equal, completed is null
         var currentTime = System.currentTimeMillis();
         note.setCreatedAt(currentTime);
         note.setUpdatedAt(currentTime);

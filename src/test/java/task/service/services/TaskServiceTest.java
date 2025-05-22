@@ -15,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TaskServiceTests
+public class TaskServiceTest
 {
     private TaskService taskService;
 
@@ -39,7 +39,7 @@ public class TaskServiceTests
     }
 
     @Test
-    void getAllTasksByUser()
+    void getAllTasksByUser_ShouldCallRepository()
     {
         // Arrange
         var userUid = "user-123";
@@ -55,7 +55,7 @@ public class TaskServiceTests
     }
 
     @Test
-    void getCompletedTasksByUser()
+    void getCompletedTasksByUser_ShouldCallRepository()
     {
         // Arrange
         var userUid = "user-123";
@@ -71,7 +71,7 @@ public class TaskServiceTests
     }
 
     @Test
-    void getPriorityTasksByUser()
+    void getPriorityTasksByUser_ShouldCallRepository()
     {
         // Arrange
         var userUid = "user-123";
@@ -97,11 +97,7 @@ public class TaskServiceTests
         payload.setPriority(true);
         payload.setCompleted(false);
 
-        doAnswer(invocation ->
-        {
-            var task = invocation.getArgument(0);
-            return null;
-        }).when(repository).persist(any(Task.class));
+        doAnswer(invocation -> null).when(repository).persist(any(Task.class));
 
         when(repository.findByUid(anyString())).thenAnswer(invocation -> {
             var task = new Task();
@@ -130,6 +126,7 @@ public class TaskServiceTests
         var existingTask = new Task();
         existingTask.setUid(itemUid);
         existingTask.setTitle("Old title");
+        existingTask.setDescription("Desc");
         existingTask.setCompleted(false);
 
         var payload = new TaskPayload();
@@ -146,7 +143,6 @@ public class TaskServiceTests
         assertTrue(updatedTask.isCompleted());
         assertNotNull(updatedTask.getCompletedAt());
         verify(repository, times(1)).update(any(Task.class));
-        verify(repository, times(1)).findByUid(itemUid);
     }
 
     @Test
