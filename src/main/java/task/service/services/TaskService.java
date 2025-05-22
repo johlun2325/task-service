@@ -68,15 +68,13 @@ public class TaskService
     public Task updateTask(final TaskPayload payload, final String itemUid)
     {
         LOGGER.info("Updating task");
+        var taskToUpdate = repository.findByUid(itemUid);
 
-        var task = buildUpdatedTask(payload, itemUid);
+        var task = buildUpdatedTask(payload, taskToUpdate);
 
         repository.update(task);
 
         LOGGER.info("Task updated with values: {}", task);
-
-        var fetchedTask = repository.findByUid(task.getUid());
-        LOGGER.info("Updated task fetched successfully with title: {}", fetchedTask.getTitle());
 
         return task;
     }
@@ -132,39 +130,38 @@ public class TaskService
         return task;
     }
 
-    private Task buildUpdatedTask(final TaskPayload payload, final String itemUid)
+    private Task buildUpdatedTask(final TaskPayload payload, final Task existing)
     {
-        var taskToUpdate = repository.findByUid(itemUid);
         var currentTime = System.currentTimeMillis();
 
         if (payload.getTitle() != null)
-            taskToUpdate.setTitle(payload.getTitle());
+            existing.setTitle(payload.getTitle());
 
         if (payload.getDescription() != null)
-            taskToUpdate.setDescription(payload.getDescription());
+            existing.setDescription(payload.getDescription());
 
         if (payload.getPriority() != null)
-            taskToUpdate.setPriority(payload.getPriority());
+            existing.setPriority(payload.getPriority());
 
         if (payload.getCompleted() != null)
         {
             var isCompleted = payload.getCompleted();
 
-            taskToUpdate.setCompleted(isCompleted);
+            existing.setCompleted(isCompleted);
 
-            if (isCompleted && taskToUpdate.getCompletedAt() == null)
+            if (isCompleted && existing.getCompletedAt() == null)
             {
                 // setting current time when completed if updated value=true and current is null
-                taskToUpdate.setCompletedAt(currentTime);
+                existing.setCompletedAt(currentTime);
 
             } else if (!isCompleted)
             {
-                taskToUpdate.setCompletedAt(null);
+                existing.setCompletedAt(null);
             }
         }
 
-        taskToUpdate.setUpdatedAt(currentTime); // setting current time when updated
+        existing.setUpdatedAt(currentTime); // setting the current time when updated
 
-        return taskToUpdate;
+        return existing;
     }
 }
