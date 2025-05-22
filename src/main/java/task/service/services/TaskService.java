@@ -5,7 +5,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import task.service.models.Note;
 import task.service.models.Task;
 import task.service.models.payloads.TaskPayload;
 import task.service.repos.TaskRepository;
