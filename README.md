@@ -7,6 +7,13 @@ If you want to learn more about Quarkus, please visit its website: <https://quar
 This project is part of a Task-managing application. It is one of several microservices that make the base
 of said application. Responsible for handling CRUD operations for user items and persisting them.
 
+## Linked repositories
+- [task-client](https://github.com/johlun2325/task-client)
+- [client-task-service](https://github.com/johlun2325/client-task-service)
+- [authentication-service](https://github.com/johlun2325/authentication-service)
+- [feedback-service](https://github.com/johlun2325/feedback-service)
+
+
 ### Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
